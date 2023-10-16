@@ -1,0 +1,40 @@
+#! /bin/bash
+
+echo "What is the WiFi SSID?"
+
+read ssid
+
+echo "What is the password?"
+
+read -s password
+
+echo "Is this your first time running this script? (y/n)"
+
+read answer
+
+ip link
+
+echo "Which interface is your WiFi card?"
+
+read nic
+
+if [ ${answer} == 'y' ]; then
+
+	touch /etc/wpa_supplicant/wpa_supplicant-${nic}.conf
+
+	printf "ctrl_interface=/run/wpa_supplicant\n" >> /etc/wpa_supplicant/wpa_supplicant-${nic}.conf
+	printf "update_config=1\n" >> /etc/wpa_supplicant/wpa_supplicant-${nic}.conf
+
+	wpa_passphrase ${ssid} ${password} >> /etc/wpa_supplicant/wpa_supplicant-${nic}.conf
+
+	wpa_supplicant -B -i ${nic} -c /etc/wpa_supplicant/wpa_supplicant-${nic}.conf
+
+else 
+
+	echo -e "You will need to switch to root user and manually add the network with the following command:\n wpa_passphrase (YOUR-WIFI-NAME) (YOUR-WIFI-PASSWORD) >> /etc/wpa_supplicant-(WIFI-CARD-NAME).conf\nCopy and paste the command and replace indicated parts with apropriate values.\n"
+
+#	wpa_passphrase ${ssid} ${password} >> /etc/wpa_supplicant-${nic}.conf
+
+#	wpa_supplicant -B -i ${nic} -c /etc/wpa_supplicant/wpa_supplicant-${nic}.conf
+
+fi
