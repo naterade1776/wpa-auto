@@ -8,3 +8,4 @@ To use, clone repository wherever you want, move to that directory, and run [ ./
 initialize the connection. Additional WiFi connections will, as of writing, require some manual configuration. The script provides instructions when this happens.
 
 If you are following the script's instructions on setting up multiple connections and encounter issues, try changing to the root user and running the command again.
+Even when that works, you may still need to manually initialize wpa_supplicant.
