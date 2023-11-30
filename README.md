@@ -1,11 +1,12 @@
 # wpa-auto
-Easy WiFi setup script.
+Use this script to easily configure a WiFi connection on a headless Linux device. 
 
-This script greatly simplifies the process of setting up an automatic WiFi connection on your machine. It is especially helpful for connecting to WiFi without a GUI, or if
-you're like me and you use Alpine Linux as your daily. It is mostly designed for machines that will only ever connect to a single WiFi network, although it will provide some help with setting up multiple WiFi networks. 
+Dependencies:
 
-To use, clone repository wherever you want, move to that directory, and run [ ./wpa-auto.sh ] as root. It will ask you a few questions, create a configuration file, and
-initialize the connection. Additional WiFi connections will, as of writing, require some manual configuration. The script provides instructions when this happens.
+- wpa_supplicant
 
-If you are following the script's instructions on setting up multiple connections and encounter issues, try changing to the root user and running the command again.
-Even when that works, you may still need to manually initialize wpa_supplicant.
+
+This script assumes that your wpa_supplicant config files are in the /etc/wpa_supplicant directory. If not, it will maybe probably still work.
+
+To use, clone to preferred directory (other than /etc), run as root, and answer the prompts. You can also run the script multiple times, follow the prompts, and
+	create multiple profiles.
