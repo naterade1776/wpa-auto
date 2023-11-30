@@ -1,6 +1,47 @@
 #! /bin/bash
 
-echo "What is the WiFi SSID?"
+#Set color variables
+RED='\033[0;31m'
+
+NC='\033[0m' 
+
+#Function to check for root privileges
+if [ "$EUID" -ne 0 ]
+
+	then printf "${RED}This script must be run as root.${NC}\n"
+
+	exit
+
+
+else (echo -e "Running with root account\n.")
+
+fi
+
+#Starts WPA.
+echo -e "Do you want to start WPA (y/n)? \nSay yes only if you have run this script before and just want to start the WiFi."
+
+read wpaquestion
+
+if [ $wpaquestion == 'y' ]; then
+
+	ip link
+
+	echo "Find the wireless interface name above. What is your interface?"
+
+	read interface
+
+	wpa_supplicant -B -i ${interface} -c /etc/wpa_supplicant/wpa_supplicant-${interface}.conf
+
+	exit
+
+
+
+else echo "Other option...\n"
+
+fi
+
+#Gather necessary data to generate a config file.
+echo "What is the WiFi SSID? (WiFi Name)"
 
 read ssid
 
@@ -8,6 +49,7 @@ echo "What is the password?"
 
 read -s password
 
+#Asking so script doesn't try to generate a duplicate config file.
 echo "Is this your first time running this script? (y/n)"
 
 read answer
@@ -18,6 +60,7 @@ echo "Which interface is your WiFi card?"
 
 read nic
 
+#Generates a WPA config file
 if [ ${answer} == 'y' ]; then
 
 	touch /etc/wpa_supplicant/wpa_supplicant-${nic}.conf
@@ -29,12 +72,11 @@ if [ ${answer} == 'y' ]; then
 
 	wpa_supplicant -B -i ${nic} -c /etc/wpa_supplicant/wpa_supplicant-${nic}.conf
 
+#Appends new profile to WPA config file
 else 
 
-	echo -e "You will need to switch to root user and manually add the network with the following command:\n wpa_passphrase (YOUR-WIFI-NAME) (YOUR-WIFI-PASSWORD) >> /etc/wpa_supplicant-(WIFI-CARD-NAME).conf\nCopy and paste the command and replace indicated parts with apropriate values.\n"
-
-#	wpa_passphrase ${ssid} ${password} >> /etc/wpa_supplicant-${nic}.conf
-
-#	wpa_supplicant -B -i ${nic} -c /etc/wpa_supplicant/wpa_supplicant-${nic}.conf
+	wpa_passphrase ${ssid} ${password} >> /etc/wpa_supplicant/wpa_supplicant-${nic}.conf
+	
+	echo "Network profile added to /etc/wpa_supplicant/wpa_supplicant-${nic}.conf"
 
 fi
